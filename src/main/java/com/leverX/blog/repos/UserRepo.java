@@ -4,5 +4,5 @@ import com.leverX.blog.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepo extends JpaRepository<User, Long> {
-    User findByFirstName(String firstName);
+    User findByUsername(String username);
 }
