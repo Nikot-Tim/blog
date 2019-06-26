@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -32,11 +33,10 @@ public class RegistrationController {
 
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
+        Date date = new Date();
+        user.setCreatedAt(date);
         userRepo.save(user);
 
         return "redirect:/login";
     }
 }
-
-        //Date date = new Date();
-        //user.setCreatedAt(date);

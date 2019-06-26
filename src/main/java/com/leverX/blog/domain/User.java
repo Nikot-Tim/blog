@@ -26,9 +26,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-   // private String lastName;
+    private String lastName;
 
-   // private String email;
+    private String email;
 
-   // private Date createdAt;
+    private Date createdAt;
 }
