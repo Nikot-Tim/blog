@@ -1,8 +1,10 @@
 package com.leverX.blog.Controller;
 
 import com.leverX.blog.domain.Article;
+import com.leverX.blog.domain.User;
 import com.leverX.blog.repos.ArticleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +32,12 @@ public class MainController {
     }
 
     @PostMapping("/articles")
-    private String add(@RequestParam String title,
+    private String add(@AuthenticationPrincipal User user,
+                       @RequestParam String title,
                        @RequestParam String text,
                        Map<String, Object> model){
 
-        Article article = new Article(title, text);
+        Article article = new Article(title, text, user);
 
         Date date = new Date();
         article.setCreatedAt(date);

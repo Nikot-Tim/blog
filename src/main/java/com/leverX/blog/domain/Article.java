@@ -22,6 +22,10 @@ public class Article {
 
     private Date updatedAt;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
     @ElementCollection(targetClass = Status.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "article_status", joinColumns = @JoinColumn(name = "article_id"))
     @Enumerated(EnumType.STRING)
@@ -30,8 +34,13 @@ public class Article {
     public Article(){
     }
 
-    public Article(String title, String text){
+    public Article(String title, String text, User user){
         this.title = title;
         this.text = text;
+        this.author = user;
+    }
+
+    public String getAuthorName(){
+        return author != null ? author.getUsername() : "<none>";
     }
 }
