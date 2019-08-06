@@ -23,7 +23,7 @@ public class Article {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author_id")
     private User author;
 
     @ElementCollection(targetClass = Status.class, fetch = FetchType.EAGER)

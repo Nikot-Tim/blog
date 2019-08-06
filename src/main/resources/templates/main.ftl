@@ -1,26 +1,45 @@
 <#import "parts/common.ftl" as c>
-<#import "parts/login.ftl" as l>
+<#include "parts/security.ftl">
 <@c.page>
-    <div>
-        <@l.logout />
-    </div>
-    <div>
-        <form method="post">
-            <input type="text" name="title" placeholder="Введите тему сообщение" />
-            <input type="text" name="text" placeholder="Введите сообщение" />
-            <input type="hidden" name="_csrf" value="${_csrf.token}" />
-            <button type="submit">Добавить</button>
-        </form>
-    </div>
-    <div>Список сообщений</div>
-    <#list articles as article>
-        <div>
-            <b>${article.id}</b>
-            <span>${article.title}</span>
-            <i>${article.text}</i>
-            <strong>${article.authorName}</strong>
+    <#if isActive>
+        <a class="btn btn-primary my-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Add new cargo
+        </a>
+        <div class="collapse" id="collapseExample">
+            <div class="form-group mt-3">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="title" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="text" placeholder="Message">
+                    </div>
+                    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    <#else>
-        No articles
-    </#list>
+    </#if>
+    <div>Messages list</div>
+    <div class="card-columns">
+        <#list articles as article>
+            <div class="card text-white text-center bg-dark my-3">
+                <div class="card-body md-3">
+                    <h5  class="card-title">${article.title}</h5>
+                    <p class="card-text">${article.text}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li type="date" class="list-group-item text-success">Created at: ${article.createdAt}</li>
+                </ul>
+                <div class="card-body">
+                    <p>Author: <a> ${article.authorName}</a>
+                    </p>
+                </div>
+            </div>
+        <#else>
+            No articles
+        </#list>
+    </div>
 </@c.page>
