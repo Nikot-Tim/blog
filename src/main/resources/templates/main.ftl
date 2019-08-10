@@ -3,7 +3,7 @@
 <@c.page>
     <#if isActive>
         <a class="btn btn-primary my-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Add new cargo
+            Add new message
         </a>
         <div class="collapse" id="collapseExample">
             <div class="form-group mt-3">
@@ -22,24 +22,25 @@
             </div>
         </div>
     </#if>
-    <div>Messages list</div>
-    <div class="card-columns">
-        <#list articles as article>
-            <div class="card text-white text-center bg-dark my-3">
-                <div class="card-body md-3">
-                    <h5  class="card-title">${article.title}</h5>
-                    <p class="card-text">${article.text}</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li type="date" class="list-group-item text-success">Created at: ${article.createdAt}</li>
-                </ul>
-                <div class="card-body">
-                    <p>Author: <a> ${article.authorName}</a>
-                    </p>
-                </div>
+    <div class="mx-auto text-center" style="max-width: 100%; max-height: 100%;"><h1>Messages list</h1></div>
+
+    <#list articles as article>
+        <div class="card text-white bg-dark my-3 mx-auto" style="max-width: 700px;">
+            <div class="card-header md-3 text-center" style="height: 50px;">
+                ${article.title}
             </div>
-        <#else>
-            No articles
-        </#list>
-    </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p class="card-text text-center">${article.text}</p>
+                    <footer class="blockquote-footer text-right">Author: <cite title="Source Title"> ${article.authorName}</cite></footer>
+                </blockquote>
+            </div>
+            <div class="card-footer text-muted " type="date-time">
+                Last updated ${article.createdAt?string('dd.MM.yyyy HH:mm:ss')}
+            </div>
+        </div>
+    <#else>
+        No articles
+    </#list>
+
 </@c.page>
