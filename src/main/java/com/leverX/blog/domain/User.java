@@ -33,8 +33,11 @@ public class User implements UserDetails {
 
     private String email;
 
+    private String activationCode;
+
     private Date createdAt;
 
+    //Возвращает полномочия, предоставленные пользователю.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
