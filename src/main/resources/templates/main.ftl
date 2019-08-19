@@ -5,14 +5,26 @@
         <a class="btn btn-primary my-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
             Add new message
         </a>
-        <div class="collapse" id="collapseExample">
+        <div class="collapse <#if article??>show</#if>" id="collapseExample">
             <div class="form-group mt-3">
                 <form method="post" enctype="multipart/form-data">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="title" placeholder="Title" />
+                        <input type="text" class="form-control ${(titleError??)?string('is-invalid', '')}"
+                               value="<#if article??>${article.title}</#if>"
+                               name="title"
+                               placeholder="Title" />
+                        <#if titleError??>
+                            <div class="invalid-feedback">${titleError}</div>
+                        </#if>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="text" placeholder="Message">
+                        <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
+                               value="<#if article??>${article.text}</#if>"
+                               name="text"
+                               placeholder="Text" />
+                        <#if textError??>
+                            <div class="invalid-feedback">${textError}</div>
+                        </#if>
                     </div>
                     <input type="hidden" name="_csrf" value="${_csrf.token}" />
                     <div class="form-group">

@@ -3,6 +3,7 @@ package com.leverX.blog.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,8 +15,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotBlank(message = "Please fill the title")
     private String title;
 
+    @NotBlank(message = "Please fill the text")
     private String text;
 
     private Date createdAt;

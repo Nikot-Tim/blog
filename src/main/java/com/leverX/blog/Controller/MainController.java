@@ -6,10 +6,12 @@ import com.leverX.blog.repos.ArticleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.Map;
 
@@ -33,19 +35,25 @@ public class MainController {
 
     @PostMapping("/articles")
     private String add(@AuthenticationPrincipal User user,
-                       @RequestParam String title,
-                       @RequestParam String text,
-                       Map<String, Object> model){
+                       @Valid Article article,
+                       BindingResult bindingResult,
+                       Model model){
 
-        Article article = new Article(title, text, user);
+        article.setAuthor(user);
 
-        Date date = new Date();
-        article.setCreatedAt(date);
+        if (bindingResult.hasErrors()){
+            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errorsMap);
+            model.addAttribute("article", article);
 
-        articleRepo.save(article);
-
+        }else {
+            Date date = new Date();
+            article.setCreatedAt(date);
+            model.addAttribute("article",null);
+            articleRepo.save(article);
+        }
         Iterable<Article> articles = articleRepo.findAll();
-        model.put("articles", articles);
+        model.addAttribute("articles", articles);
 
         return "main";
     }
