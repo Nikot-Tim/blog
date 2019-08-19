@@ -49,7 +49,7 @@ public class RegistrationController {
             return "registration";
         }
 
-        return "redirect:/auth";
+        return "greeting";
     }
 
     @GetMapping("/auth/confirm/{code}")

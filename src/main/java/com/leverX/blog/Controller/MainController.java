@@ -21,8 +21,11 @@ public class MainController {
     @Autowired
     private ArticleRepo articleRepo;
     @GetMapping("/")
-    public String greeting(Map<String, Object> model){
-        return "greeting";
+    public String greeting(@AuthenticationPrincipal User user, Map<String, Object> model){
+        if(user != null && user.isActive()){
+            return "redirect:/articles";
+        }else
+        return "redirect:/auth";
     }
 
     @GetMapping("/articles")
