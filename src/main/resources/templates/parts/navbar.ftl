@@ -7,7 +7,13 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto"> </ul>
+        <ul class="navbar-nav mr-auto">
+            <#if user??>
+                <li>
+                    <a class="nav-link" href="/my/${currentUserId}">My articles</a>
+                </li>
+            </#if>
+        </ul>
         <div class="navbar-text mr-3">${name}</div>
         <@l.logout />
     </div>
