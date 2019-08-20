@@ -67,6 +67,7 @@ public class MainController {
     public String showUserArticles(@PathVariable User user,  Model model){
         Set<Article> articles = user.getArticles();
         model.addAttribute("articles", articles);
+        model.addAttribute("openActionForm", false);
         return "myArticles";
     }
 
@@ -75,8 +76,10 @@ public class MainController {
         model.addAttribute("article", article);
         User user = article.getAuthor();
         model.addAttribute("articles", user.getArticles());
+        model.addAttribute("openActionForm", true);
         return "myArticles";
     }
+
     @PostMapping("/articles/{article}")
     public String updateArticle(@AuthenticationPrincipal User currentUser, @PathVariable Article article, @RequestParam("id") Article updatedArticle,
                                 @RequestParam("title") String title, @RequestParam("text") String text
@@ -95,5 +98,11 @@ public class MainController {
         articleRepo.save(updatedArticle);
 
         return "redirect:/my/"+user.getId();
+    }
+
+    @GetMapping("/articles/delete/{article}")
+    public String delete(@PathVariable Article article, Model model){
+        articleRepo.delete(article);
+        return "redirect:/articles";
     }
 }
