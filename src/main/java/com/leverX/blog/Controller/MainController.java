@@ -1,15 +1,20 @@
 package com.leverX.blog.Controller;
 
 import com.leverX.blog.domain.Article;
+import com.leverX.blog.domain.Status;
 import com.leverX.blog.domain.User;
 import com.leverX.blog.repos.ArticleRepo;
+import com.leverX.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -21,12 +26,15 @@ public class MainController {
 
     @Autowired
     private ArticleRepo articleRepo;
+    @Autowired
+    private ArticleService articleService;
+
     @GetMapping("/")
-    public String greeting(@AuthenticationPrincipal User user, Map<String, Object> model){
+    public String greeting(@AuthenticationPrincipal User user){
         if(user != null && user.isActive()){
             return "redirect:/articles";
         }else
-        return "redirect:/auth";
+            return "redirect:/auth";
     }
 
     @GetMapping("/articles")
@@ -34,11 +42,13 @@ public class MainController {
 
         Iterable<Article> articles = articleRepo.findAll();
         model.put("articles", articles);
+        model.put("statuses", Status.values());
         return "main";
     }
 
     @PostMapping("/articles")
     private String add(@AuthenticationPrincipal User user,
+                       @RequestParam Map<String,String> status,
                        @Valid Article article,
                        BindingResult bindingResult,
                        Model model){
@@ -48,17 +58,22 @@ public class MainController {
         if (bindingResult.hasErrors()){
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
-            model.addAttribute("article", article);
+            Article articleStatus = articleService.determineArticleStatus(status, article);
+            model.addAttribute("article", articleStatus);
+            model.addAttribute("statuses", Status.values());
 
         }else {
             Date date = new Date();
             article.setCreatedAt(date);
             article.setUpdatedAt(date);
-            model.addAttribute("article",null);
-            articleRepo.save(article);
+            Article saveArticle = articleService.determineArticleStatus(status, article);
+            model.addAttribute("article", null);
+            articleRepo.save(saveArticle);
+
         }
         Iterable<Article> articles = articleRepo.findAll();
         model.addAttribute("articles", articles);
+        model.addAttribute("statuses", Status.values());
 
         return "main";
     }
@@ -77,26 +92,32 @@ public class MainController {
         User user = article.getAuthor();
         model.addAttribute("articles", user.getArticles());
         model.addAttribute("openActionForm", true);
+        model.addAttribute("statuses", Status.values());
         return "myArticles";
     }
 
     @PostMapping("/articles/{article}")
-    public String updateArticle(@AuthenticationPrincipal User currentUser, @PathVariable Article article, @RequestParam("id") Article updatedArticle,
-                                @RequestParam("title") String title, @RequestParam("text") String text
+    public String updateArticle(@AuthenticationPrincipal User currentUser,
+                                @PathVariable Article article,
+                                @RequestParam("id") Article updatedArticle,
+                                @RequestParam("title") String title,
+                                @RequestParam("text") String text,
+                                @RequestParam Map<String,String> status
     ){
         User user = article.getAuthor();
-        if(article.getAuthor().equals(currentUser)){
-            if(!StringUtils.isEmpty(title)){
+        if(article.getAuthor().equals(currentUser)) {
+            if (!StringUtils.isEmpty(title)) {
                 updatedArticle.setTitle(title);
             }
-            if(!StringUtils.isEmpty(text)){
+            if (!StringUtils.isEmpty(text)) {
                 updatedArticle.setText(text);
             }
         }
         Date date = new Date();
         updatedArticle.setUpdatedAt(date);
-        articleRepo.save(updatedArticle);
-
+        Article saveArticle = articleService.determineArticleStatus(status, updatedArticle);
+        articleRepo.delete(article);
+        articleRepo.save(saveArticle);
         return "redirect:/my/"+user.getId();
     }
 
