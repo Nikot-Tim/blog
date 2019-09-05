@@ -1,5 +1,7 @@
 <#include "security.ftl">
-<#list articles as article>
+<#import "pager.ftl" as p>
+    <@p.pager url page/>
+<#list page.content as article>
     <#if !isActive && article.statuses?seq_contains("PUBLIC")>
         <div class="card text-white bg-dark my-3 mx-auto" style="max-width: 700px;">
             <div class="card-header md-3 text-center" style="height: 50px;">
