@@ -1,4 +1,4 @@
-package com.leverX.blog.Controller;
+package com.leverX.blog.controller;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

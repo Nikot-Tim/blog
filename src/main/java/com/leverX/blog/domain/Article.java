@@ -34,6 +34,9 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private Set<Status> statuses;
 
+    @OneToMany(mappedBy = "post",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Comment> comments;
+
     public Article(){
     }
 
@@ -42,7 +45,7 @@ public class Article {
         this.text = text;
         this.author = user;
     }
-
+    
     public String getAuthorName(){
         return author != null ? author.getUsername() : "<none>";
     }

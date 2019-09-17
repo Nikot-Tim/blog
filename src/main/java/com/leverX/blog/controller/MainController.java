@@ -1,4 +1,4 @@
-package com.leverX.blog.Controller;
+package com.leverX.blog.controller;
 
 import com.leverX.blog.domain.Article;
 import com.leverX.blog.domain.Status;
@@ -87,7 +87,8 @@ public class MainController {
         Page<Article> page = articleRepo.findByAuthor(user, pageable);
         model.addAttribute("page", page);
         model.addAttribute("openActionForm", false);
-        model.addAttribute("url","/my/{user}" );
+        String url = "/my/" + user.getId();
+        model.addAttribute("url",url );
         return "myArticles";
     }
 
@@ -99,7 +100,8 @@ public class MainController {
         model.addAttribute("page", page);
         model.addAttribute("openActionForm", true);
         model.addAttribute("statuses", Status.values());
-        model.addAttribute("url","/articles/{article}");
+        String url = "/articles/" + article.getId();
+        model.addAttribute("url",url );
         return "myArticles";
     }
 
@@ -129,7 +131,7 @@ public class MainController {
     }
 
     @GetMapping("/articles/delete/{article}")
-    public String delete(@PathVariable Article article, Model model){
+    public String delete(@PathVariable Article article){
         articleRepo.delete(article);
         return "redirect:/articles";
     }

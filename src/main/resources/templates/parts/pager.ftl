@@ -1,4 +1,4 @@
-<#macro pager url page>
+<#macro pager url page pagerContent>
     <#if page.getTotalPages() gt 7>
         <#assign
             totalPages = page.getTotalPages()
@@ -39,7 +39,7 @@
 
         <ul class="pagination justify-content-center">
             <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Articles on the page</a>
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">${pagerContent} on the page</a>
             </li>
             <#list [5,10,25,50] as c>
                 <#if c==page.getSize()>

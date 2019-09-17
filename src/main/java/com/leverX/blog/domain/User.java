@@ -1,8 +1,7 @@
 package com.leverX.blog.domain;
 
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -51,6 +50,7 @@ public class User implements UserDetails {
     private Date createdAt;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     private Set<Article> articles;
 
     @Override

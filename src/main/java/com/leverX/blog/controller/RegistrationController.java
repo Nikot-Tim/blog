@@ -1,4 +1,4 @@
-package com.leverX.blog.Controller;
+package com.leverX.blog.controller;
 
 import com.leverX.blog.domain.User;
 import com.leverX.blog.service.UserService;
