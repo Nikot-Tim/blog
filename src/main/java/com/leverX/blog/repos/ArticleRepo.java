@@ -11,4 +11,6 @@ public interface ArticleRepo extends CrudRepository<Article, Long> {
     Page<Article> findAll(Pageable pageable);
 
     Page<Article> findByAuthor(User user, Pageable pageable);
+
+    Page<Article> findByTag(String tag, Pageable pageable);
 }

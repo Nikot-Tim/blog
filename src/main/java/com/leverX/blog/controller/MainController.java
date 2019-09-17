@@ -41,10 +41,17 @@ public class MainController {
     }
 
     @GetMapping("/articles")
-    public String main(Model model, @PageableDefault(sort={"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    public String main(@RequestParam(required = false, defaultValue = "") String filter,
+                       Model model, @PageableDefault(sort={"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Article> page;
 
-        Page<Article> page = articleRepo.findAll(pageable);
+        if (filter != null && !filter.isEmpty()) {
+            page = articleRepo.findByTag(filter, pageable);
+        } else {
+            page = articleRepo.findAll(pageable);
+        }
         model.addAttribute("page", page);
+        model.addAttribute("filter", filter);
         model.addAttribute("url","/articles" );
         model.addAttribute("statuses", Status.values());
         return "main";
@@ -111,6 +118,7 @@ public class MainController {
                                 @RequestParam("id") Article updatedArticle,
                                 @RequestParam("title") String title,
                                 @RequestParam("text") String text,
+                                @RequestParam("tag") String tag,
                                 @RequestParam Map<String,String> status
     ){
         User user = article.getAuthor();
@@ -120,6 +128,9 @@ public class MainController {
             }
             if (!StringUtils.isEmpty(text)) {
                 updatedArticle.setText(text);
+            }
+            if (!StringUtils.isEmpty(tag)) {
+                updatedArticle.setText(tag);
             }
         }
         Date date = new Date();

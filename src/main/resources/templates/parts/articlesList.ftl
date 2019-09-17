@@ -12,7 +12,7 @@
             </div>
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
-                    <p class="card-text text-center">${article.text}</p>
+                    <p class="card-text text-center">${article.text}#${article.tag}</p>
                     <footer class="blockquote-footer text-right">Author: <cite title="Source Title"> ${article.authorName}</cite></footer>
                 </blockquote>
             </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
-                    <p class="card-text text-center">${article.text}</p>
+                    <p class="card-text text-center">${article.text}#${article.tag}</p>
                     <footer class="blockquote-footer text-right">Author: <cite title="Source Title"> ${article.authorName}</cite></footer>
                 </blockquote>
             </div>

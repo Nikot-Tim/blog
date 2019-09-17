@@ -21,6 +21,9 @@ public class Article {
     @NotBlank(message = "Please fill the text")
     private String text;
 
+    @NotBlank(message = "Please add tag")
+    private String tag;
+
     private Date createdAt;
 
     private Date updatedAt;
