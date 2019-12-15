@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class MainController {
@@ -90,13 +91,39 @@ public class MainController {
     }
 
     @GetMapping("/my/{user}")
-    public String showUserArticles(@PathVariable User user,  Model model, @PageableDefault(sort={"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable){
+    public String showUserArticles(@AuthenticationPrincipal User currentUser, @PathVariable User user,  Model model, @PageableDefault(sort={"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable){
         Page<Article> page = articleRepo.findByAuthor(user, pageable);
         model.addAttribute("page", page);
         model.addAttribute("openActionForm", false);
         String url = "/my/" + user.getId();
         model.addAttribute("url",url );
+        model.addAttribute("userChannel", user);
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("isCurrentUser", currentUser.equals(user));
         return "myArticles";
+    }
+
+    @GetMapping("/user-articles/{user}")
+    public String userArticles(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user,
+            Model model,
+            @PageableDefault(sort={"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable
+
+    ) {
+        Page<Article> page = articleRepo.findByAuthor(user, pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("author", user.getUsername());
+        String url = "/user-articles/" + user.getId();
+        model.addAttribute("url",url );
+        model.addAttribute("userChannel", user);
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("isCurrentUser", currentUser.equals(user));
+        return "userArticle";
     }
 
     @GetMapping("/articles/{article}")
@@ -122,6 +149,7 @@ public class MainController {
                                 @RequestParam Map<String,String> status
     ){
         User user = article.getAuthor();
+
         if(article.getAuthor().equals(currentUser)) {
             if (!StringUtils.isEmpty(title)) {
                 updatedArticle.setTitle(title);
